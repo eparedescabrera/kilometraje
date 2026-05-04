@@ -3,11 +3,12 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxFdm7_6-WZ1elEcDQRdEIv
 const form = document.getElementById("formRegistro");
 const fecha = document.getElementById("fecha");
 const vehiculo = document.getElementById("vehiculo");
+const placa = document.getElementById("placa");
 const proyecto = document.getElementById("proyecto");
+const conductor = document.getElementById("conductor");
 const kmInicial = document.getElementById("kmInicial");
 const kmFinal = document.getElementById("kmFinal");
 const totalKilometraje = document.getElementById("totalKilometraje");
-const observacion = document.getElementById("observacion");
 
 const tabla = document.getElementById("tabla");
 const totalRegistros = document.getElementById("totalRegistros");
@@ -20,26 +21,71 @@ let datosGlobales = [];
 fecha.value = new Date().toISOString().split("T")[0];
 
 function calcularTotal() {
-  const inicial = Number(kmInicial.value);
-  const final = Number(kmFinal.value);
-
   if (kmInicial.value === "" || kmFinal.value === "") {
     totalKilometraje.value = "";
     return;
   }
 
+  const inicial = Number(kmInicial.value);
+  const final = Number(kmFinal.value);
   const total = final - inicial;
 
-  if (total < 0) {
-    totalKilometraje.value = "";
-    return;
-  }
-
-  totalKilometraje.value = total;
+  totalKilometraje.value = total >= 0 ? total : "";
 }
 
 kmInicial.addEventListener("input", calcularTotal);
 kmFinal.addEventListener("input", calcularTotal);
+
+vehiculo.addEventListener("change", function () {
+  const option = vehiculo.options[vehiculo.selectedIndex];
+  placa.value = option.dataset.placa || "";
+});
+
+function cargarCatalogos() {
+  const callbackName = "catalogos_" + Date.now();
+
+  window[callbackName] = function (data) {
+    llenarVehiculos(data.vehiculos || []);
+    llenarProyectos(data.proyectos || []);
+    llenarConductores(data.conductores || []);
+
+    delete window[callbackName];
+    document.getElementById(callbackName)?.remove();
+  };
+
+  const script = document.createElement("script");
+  script.id = callbackName;
+  script.src = `${API_URL}?accion=catalogos&callback=${callbackName}`;
+  document.body.appendChild(script);
+}
+
+function llenarVehiculos(data) {
+  vehiculo.innerHTML = `<option value="">Seleccione vehículo</option>`;
+
+  data.forEach(item => {
+    vehiculo.innerHTML += `
+      <option value="${item.vehiculo}" data-placa="${item.placa}">
+        ${item.vehiculo} - ${item.placa}
+      </option>
+    `;
+  });
+}
+
+function llenarProyectos(data) {
+  proyecto.innerHTML = `<option value="">Seleccione proyecto</option>`;
+
+  data.forEach(item => {
+    proyecto.innerHTML += `<option value="${item}">${item}</option>`;
+  });
+}
+
+function llenarConductores(data) {
+  conductor.innerHTML = `<option value="">Seleccione conductor</option>`;
+
+  data.forEach(item => {
+    conductor.innerHTML += `<option value="${item}">${item}</option>`;
+  });
+}
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -53,62 +99,86 @@ form.addEventListener("submit", async function (e) {
     return;
   }
 
+  // 🔥 CONFIRMACIÓN
+  const result = await Swal.fire({
+    title: "¿Guardar registro?",
+    html: `
+      <b>Vehículo:</b> ${vehiculo.value}<br>
+      <b>Placa:</b> ${placa.value}<br>
+      <b>Proyecto:</b> ${proyecto.value}<br>
+      <b>Conductor:</b> ${conductor.value}<br>
+      <b>Total KM:</b> ${total}
+    `,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Sí, guardar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#2563eb",
+    cancelButtonColor: "#dc2626"
+  });
+
+  // ❌ Si cancela, no guarda
+  if (!result.isConfirmed) return;
+
   const data = {
     fecha: fecha.value,
     vehiculo: vehiculo.value,
+    placa: placa.value,
     proyecto: proyecto.value,
     kmInicial: inicial,
     kmFinal: final,
     totalKm: total,
-    observacion: observacion.value.trim()
+    conductor: conductor.value
   };
 
   try {
-  await fetch(API_URL, {
-  method: "POST",
-  mode: "no-cors",
-  body: JSON.stringify(data)
-});
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(data)
+    });
 
     Swal.fire({
       icon: "success",
-      title: "Registro guardado",
-      text: "El recorrido se guardó correctamente.",
-      timer: 1800,
+      title: "Guardado",
+      text: "Registro guardado correctamente",
+      timer: 1500,
       showConfirmButton: false
     });
 
     form.reset();
     fecha.value = new Date().toISOString().split("T")[0];
+    placa.value = "";
     totalKilometraje.value = "";
 
-    setTimeout(() => {
-      cargarDatos();
-    }, 1500);
+    setTimeout(cargarDatos, 1200);
 
   } catch (error) {
-    console.error(error);
     Swal.fire("Error", "No se pudo guardar el registro.", "error");
   }
 });
 
 function cargarDatos() {
-  const callbackName = "callback_" + new Date().getTime();
+  const callbackName = "registros_" + Date.now();
 
   window[callbackName] = function (data) {
+    datosGlobales = data;
     mostrarDatos(data);
+
     delete window[callbackName];
+    document.getElementById(callbackName)?.remove();
   };
 
   const script = document.createElement("script");
-  script.src = API_URL + "?callback=" + callbackName;
-
+  script.id = callbackName;
+  script.src = `${API_URL}?callback=${callbackName}`;
   document.body.appendChild(script);
 }
-function formatearFecha(fecha) {
-  if (!fecha) return "";
 
-  const nuevaFecha = new Date(fecha);
+function formatearFecha(valor) {
+  if (!valor) return "";
+
+  const nuevaFecha = new Date(valor);
 
   return nuevaFecha.toLocaleDateString("es-CR", {
     year: "numeric",
@@ -116,41 +186,43 @@ function formatearFecha(fecha) {
     day: "2-digit"
   });
 }
+
 function mostrarDatos(datos) {
   tabla.innerHTML = "";
 
   const textoBusqueda = buscar.value.toLowerCase();
 
-  const datosFiltrados = datos.filter((item) => {
-    return (
-      String(item.fecha).toLowerCase().includes(textoBusqueda) ||
-      String(item.vehiculo).toLowerCase().includes(textoBusqueda) ||
-      String(item.proyecto).toLowerCase().includes(textoBusqueda)
-    );
-  });
+  const datosFiltrados = datos.filter(item =>
+    String(item.fecha).toLowerCase().includes(textoBusqueda) ||
+    String(item.vehiculo).toLowerCase().includes(textoBusqueda) ||
+    String(item.placa).toLowerCase().includes(textoBusqueda) ||
+    String(item.proyecto).toLowerCase().includes(textoBusqueda) ||
+    String(item.conductor).toLowerCase().includes(textoBusqueda)
+  );
 
   if (datosFiltrados.length === 0) {
     tabla.innerHTML = `
       <tr>
-        <td colspan="7">No hay registros</td>
+        <td colspan="8">No hay registros</td>
       </tr>
     `;
   }
 
   let sumaKm = 0;
 
-  datosFiltrados.forEach((item) => {
+  datosFiltrados.forEach(item => {
     sumaKm += Number(item.totalKm) || 0;
 
     tabla.innerHTML += `
       <tr>
         <td>${formatearFecha(item.fecha)}</td>
         <td>${item.vehiculo}</td>
+        <td>${item.placa}</td>
         <td>${item.proyecto}</td>
         <td>${item.kmInicial}</td>
         <td>${item.kmFinal}</td>
         <td><strong>${item.totalKm}</strong></td>
-        <td>${item.observacion || "-"}</td>
+        <td>${item.conductor || "-"}</td>
       </tr>
     `;
   });
@@ -171,4 +243,5 @@ btnLimpiar.addEventListener("click", function () {
   );
 });
 
+cargarCatalogos();
 cargarDatos();

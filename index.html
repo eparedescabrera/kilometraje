@@ -8,7 +8,6 @@
 
   <link rel="stylesheet" href="./css/style.css" />
 
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -17,7 +16,7 @@
 
     <header>
       <h1>Control de Kilometraje</h1>
-      <p>Registro diario de vehículos y proyectos</p>
+      <p>Registro diario de vehículos, placas, proyectos y conductores</p>
     </header>
 
     <section class="resumen">
@@ -37,55 +36,55 @@
 
       <form id="formRegistro" class="form-grid">
 
-  <div class="form-group">
-    <label for="fecha">Fecha</label>
-    <input type="date" id="fecha" required />
-  </div>
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" required />
+        </div>
 
-  <div class="form-group">
-    <label for="vehiculo">Vehículo</label>
-    <select id="vehiculo" required>
-      <option value="">Seleccione</option>
-      <option value="Camión 1">Camión 1</option>
-      <option value="Camión 2">Camión 2</option>
-      <option value="Pick Up">Pick Up</option>
-      <option value="Buseta">Buseta</option>
-    </select>
-  </div>
+        <div class="form-group">
+          <label for="vehiculo">Vehículo</label>
+          <select id="vehiculo" required>
+            <option value="">Cargando vehículos...</option>
+          </select>
+        </div>
 
-  <div class="form-group">
-    <label for="proyecto">Proyecto</label>
-    <select id="proyecto" required>
-      <option value="">Seleccione</option>
-      <option value="Proyecto Liberia">Proyecto Liberia</option>
-      <option value="Proyecto Santa Cruz">Proyecto Santa Cruz</option>
-      <option value="Proyecto Nicoya">Proyecto Nicoya</option>
-    </select>
-  </div>
+        <div class="form-group">
+          <label for="placa">Placa</label>
+          <input type="text" id="placa" readonly />
+        </div>
 
-  <div class="form-group">
-    <label for="kmInicial">KM Inicial</label>
-    <input type="number" id="kmInicial" min="0" step="0.01" required />
-  </div>
+        <div class="form-group">
+          <label for="proyecto">Proyecto</label>
+          <select id="proyecto" required>
+            <option value="">Cargando proyectos...</option>
+          </select>
+        </div>
 
-  <div class="form-group">
-    <label for="kmFinal">KM Final</label>
-    <input type="number" id="kmFinal" min="0" step="0.01" required />
-  </div>
+        <div class="form-group">
+          <label for="conductor">Conductor</label>
+          <select id="conductor" required>
+            <option value="">Cargando conductores...</option>
+          </select>
+        </div>
 
-  <div class="form-group">
-    <label for="totalKilometraje">Total KM</label>
-    <input type="number" id="totalKilometraje" readonly />
-  </div>
+        <div class="form-group">
+          <label for="kmInicial">KM Inicial</label>
+          <input type="number" id="kmInicial" min="0" step="0.01" required />
+        </div>
 
-  <div class="form-group full">
-    <label for="observacion">Observación</label>
-    <textarea id="observacion" rows="3" placeholder="Opcional"></textarea>
-  </div>
+        <div class="form-group">
+          <label for="kmFinal">KM Final</label>
+          <input type="number" id="kmFinal" min="0" step="0.01" required />
+        </div>
 
-  <button type="submit" class="full">Guardar registro</button>
+        <div class="form-group">
+          <label for="totalKilometraje">Total KM</label>
+          <input type="number" id="totalKilometraje" readonly />
+        </div>
 
-</form>
+        <button type="submit" class="full">Guardar registro</button>
+
+      </form>
     </section>
 
     <section class="card">
@@ -97,7 +96,7 @@
       <input
         type="text"
         id="buscar"
-        placeholder="Buscar por vehículo, proyecto o fecha..."
+        placeholder="Buscar por fecha, vehículo, placa, proyecto o conductor..."
       />
 
       <div class="table-wrapper">
@@ -106,11 +105,12 @@
             <tr>
               <th>Fecha</th>
               <th>Vehículo</th>
+              <th>Placa</th>
               <th>Proyecto</th>
               <th>KM Inicial</th>
               <th>KM Final</th>
               <th>Total KM</th>
-              <th>Observación</th>
+              <th>Conductor</th>
             </tr>
           </thead>
 
