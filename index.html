@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Control de Kilometraje</title>
+
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <h1>Control de Kilometraje</h1>
+      <p>Registro diario de vehículos y proyectos</p>
+    </header>
+
+    <section class="resumen">
+      <div>
+        <span>Total registros</span>
+        <h2 id="totalRegistros">0</h2>
+      </div>
+
+      <div>
+        <span>Total KM</span>
+        <h2 id="totalKm">0</h2>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Nuevo registro</h2>
+
+      <form id="formRegistro" class="form-grid">
+
+  <div class="form-group">
+    <label for="fecha">Fecha</label>
+    <input type="date" id="fecha" required />
+  </div>
+
+  <div class="form-group">
+    <label for="vehiculo">Vehículo</label>
+    <select id="vehiculo" required>
+      <option value="">Seleccione</option>
+      <option value="Camión 1">Camión 1</option>
+      <option value="Camión 2">Camión 2</option>
+      <option value="Pick Up">Pick Up</option>
+      <option value="Buseta">Buseta</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="proyecto">Proyecto</label>
+    <select id="proyecto" required>
+      <option value="">Seleccione</option>
+      <option value="Proyecto Liberia">Proyecto Liberia</option>
+      <option value="Proyecto Santa Cruz">Proyecto Santa Cruz</option>
+      <option value="Proyecto Nicoya">Proyecto Nicoya</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="kmInicial">KM Inicial</label>
+    <input type="number" id="kmInicial" min="0" step="0.01" required />
+  </div>
+
+  <div class="form-group">
+    <label for="kmFinal">KM Final</label>
+    <input type="number" id="kmFinal" min="0" step="0.01" required />
+  </div>
+
+  <div class="form-group">
+    <label for="totalKilometraje">Total KM</label>
+    <input type="number" id="totalKilometraje" readonly />
+  </div>
+
+  <div class="form-group full">
+    <label for="observacion">Observación</label>
+    <textarea id="observacion" rows="3" placeholder="Opcional"></textarea>
+  </div>
+
+  <button type="submit" class="full">Guardar registro</button>
+
+</form>
+    </section>
+
+    <section class="card">
+      <div class="title-row">
+        <h2>Reporte</h2>
+        <button type="button" id="btnLimpiar" class="danger">Limpiar todo</button>
+      </div>
+
+      <input
+        type="text"
+        id="buscar"
+        placeholder="Buscar por vehículo, proyecto o fecha..."
+      />
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Vehículo</th>
+              <th>Proyecto</th>
+              <th>KM Inicial</th>
+              <th>KM Final</th>
+              <th>Total KM</th>
+              <th>Observación</th>
+            </tr>
+          </thead>
+
+          <tbody id="tabla"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>
