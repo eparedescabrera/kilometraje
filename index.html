@@ -8,99 +8,156 @@
 
   <link rel="stylesheet" href="./css/style.css" />
 
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-  <iv class="container">
 
-    <header>
-      <h1>Control de Kilometraje</h1>
-      <p>Registro diario de vehículos, placas, proyectos y conductores</p>
+  <div class="background-overlay"></div>
+
+  <div class="container">
+
+    <header class="hero">
+      <div class="hero-content">
+        <h1>
+          <i class="fa-solid fa-truck-fast"></i>
+          Control de Kilometraje
+        </h1>
+
+        <p>
+          ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ...¡GRACIAS!
+        </p>
+      </div>
     </header>
 
     <section class="resumen">
-      <div>
-        <span>Total registros</span>
-        <h2 id="totalRegistros">0</h2>
+
+      <div class="resumen-card">
+        <i class="fa-solid fa-file-lines"></i>
+
+        <div>
+          <span>Total registros</span>
+          <h2 id="totalRegistros">0</h2>
+        </div>
       </div>
 
-      <div>
-        <span>Total KM</span>
-        <h2 id="totalKm">0</h2>
+      <div class="resumen-card">
+        <i class="fa-solid fa-road"></i>
+
+        <div>
+          <span>Total KM</span>
+          <h2 id="totalKm">0</h2>
+        </div>
       </div>
+
     </section>
 
     <section class="card">
-      <h2>Nuevo registro</h2>
+
+      <div class="card-title">
+        <i class="fa-solid fa-clipboard-list"></i>
+        <h2>Nuevo Registro</h2>
+      </div>
 
       <form id="formRegistro" class="form-grid">
 
         <div class="form-group">
-          <label for="fecha">Fecha</label>
+          <label>Fecha</label>
           <input type="date" id="fecha" required />
         </div>
 
         <div class="form-group">
-          <label for="vehiculo">Vehículo</label>
+          <label>Vehículo</label>
+
           <select id="vehiculo" required>
             <option value="">Cargando vehículos...</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="placa">Placa</label>
+          <label>Placa</label>
           <input type="text" id="placa" readonly />
         </div>
 
         <div class="form-group">
-          <label for="proyecto">Proyecto</label>
+          <label>Proyecto</label>
+
           <select id="proyecto" required>
             <option value="">Cargando proyectos...</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="conductor">Conductor</label>
+          <label>Conductor</label>
+
           <select id="conductor" required>
             <option value="">Cargando conductores...</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="kmInicial">KM Inicial</label>
-          <input type="number" id="kmInicial" min="0" step="0.01" required />
+          <label>KM Inicial</label>
+
+          <input
+            type="text"
+            id="kmInicial"
+            maxlength="6"
+            inputmode="numeric"
+            required
+          />
         </div>
 
         <div class="form-group">
-          <label for="kmFinal">KM Final</label>
-          <input type="number" id="kmFinal" min="0" step="0.01" required />
+          <label>KM Final</label>
+
+          <input
+            type="text"
+            id="kmFinal"
+            maxlength="6"
+            inputmode="numeric"
+            required
+          />
         </div>
 
         <div class="form-group">
-          <label for="totalKilometraje">Total KM</label>
-          <input type="number" id="totalKilometraje" readonly />
+          <label>Total KM</label>
+          <input type="text" id="totalKilometraje" readonly />
         </div>
 
-        <button type="submit" class="full">Guardar registro</button>
+        <button type="submit" class="btn-guardar">
+          <i class="fa-solid fa-floppy-disk"></i>
+          Guardar Registro
+        </button>
 
       </form>
     </section>
 
     <section class="card">
-      <div class="title-row">
-        <h2>Reporte</h2>
-        <button type="button" id="btnLimpiar" class="danger">Limpiar todo</button>
+
+      <div class="card-title">
+        <i class="fa-solid fa-chart-column"></i>
+        <h2>Reporte de Registros</h2>
       </div>
 
-      <input
-        type="text"
-        id="buscar"
-        placeholder="Buscar por fecha, vehículo, placa, proyecto o conductor..."
-      />
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          type="text"
+          id="buscar"
+          placeholder="Buscar por vehículo, placa, proyecto o conductor..."
+        />
+      </div>
 
       <div class="table-wrapper">
+
         <table>
+
           <thead>
             <tr>
               <th>Fecha</th>
@@ -115,20 +172,24 @@
           </thead>
 
           <tbody id="tabla"></tbody>
+
         </table>
+
       </div>
+
     </section>
 
-  </iv>
-  
-<a 
-  href="https://wa.me/50685548880" 
-  class="whatsapp-float" 
-  target="_blank"
->
-  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
-</a>
+  </div>
+
+  <a
+    href="https://wa.me/50685548880"
+    class="whatsapp-float"
+    target="_blank"
+  >
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
 
   <script src="./js/script.js"></script>
+
 </body>
 </html>

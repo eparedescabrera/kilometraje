@@ -20,6 +20,10 @@ let datosGlobales = [];
 
 fecha.value = new Date().toISOString().split("T")[0];
 
+function limitarSeisDigitos(input) {
+  input.value = input.value.replace(/\D/g, "").slice(0, 6);
+}
+
 function calcularTotal() {
   if (kmInicial.value === "" || kmFinal.value === "") {
     totalKilometraje.value = "";
@@ -33,8 +37,15 @@ function calcularTotal() {
   totalKilometraje.value = total >= 0 ? total : "";
 }
 
-kmInicial.addEventListener("input", calcularTotal);
-kmFinal.addEventListener("input", calcularTotal);
+kmInicial.addEventListener("input", function () {
+  limitarSeisDigitos(kmInicial);
+  calcularTotal();
+});
+
+kmFinal.addEventListener("input", function () {
+  limitarSeisDigitos(kmFinal);
+  calcularTotal();
+});
 
 vehiculo.addEventListener("change", function () {
   const option = vehiculo.options[vehiculo.selectedIndex];
@@ -90,6 +101,15 @@ function llenarConductores(data) {
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
+  if (kmInicial.value.length !== 6 || kmFinal.value.length !== 6) {
+    Swal.fire(
+      "Error",
+      "KM Inicial y KM Final deben tener exactamente 6 dígitos.",
+      "error"
+    );
+    return;
+  }
+
   const inicial = Number(kmInicial.value);
   const final = Number(kmFinal.value);
   const total = final - inicial;
@@ -99,7 +119,6 @@ form.addEventListener("submit", async function (e) {
     return;
   }
 
-  // 🔥 CONFIRMACIÓN
   const result = await Swal.fire({
     title: "¿Guardar registro?",
     html: `
@@ -107,6 +126,8 @@ form.addEventListener("submit", async function (e) {
       <b>Placa:</b> ${placa.value}<br>
       <b>Proyecto:</b> ${proyecto.value}<br>
       <b>Conductor:</b> ${conductor.value}<br>
+      <b>KM Inicial:</b> ${inicial}<br>
+      <b>KM Final:</b> ${final}<br>
       <b>Total KM:</b> ${total}
     `,
     icon: "question",
@@ -117,7 +138,6 @@ form.addEventListener("submit", async function (e) {
     cancelButtonColor: "#dc2626"
   });
 
-  // ❌ Si cancela, no guarda
   if (!result.isConfirmed) return;
 
   const data = {
@@ -235,13 +255,15 @@ buscar.addEventListener("input", function () {
   mostrarDatos(datosGlobales);
 });
 
-btnLimpiar.addEventListener("click", function () {
-  Swal.fire(
-    "Aviso",
-    "Para limpiar los datos debes borrarlos directamente desde Google Sheets.",
-    "info"
-  );
-});
+if (btnLimpiar) {
+  btnLimpiar.addEventListener("click", function () {
+    Swal.fire(
+      "Aviso",
+      "Para limpiar los datos debes borrarlos directamente desde Google Sheets.",
+      "info"
+    );
+  });
+}
 
 cargarCatalogos();
 cargarDatos();
