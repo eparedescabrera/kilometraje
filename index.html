@@ -22,61 +22,84 @@
 
   <div class="container">
 
+    <!-- HERO -->
     <header class="hero">
+
       <div class="hero-content">
+
         <h1>
           <i class="fa-solid fa-truck-fast"></i>
           Control de Kilometraje
         </h1>
 
         <p>
-          ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ...¡GRACIAS!
+          ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ... ¡GRACIAS!
         </p>
+
       </div>
+
     </header>
 
+    <!-- CARRO ANIMADO -->
+    <div class="car-animation">
+      <div class="road"></div>
+
+      <i class="fa-solid fa-truck-moving"></i>
+    </div>
+
+    <!-- RESUMEN -->
     <section class="resumen">
 
       <div class="resumen-card">
+
         <i class="fa-solid fa-file-lines"></i>
 
         <div>
           <span>Total registros</span>
           <h2 id="totalRegistros">0</h2>
         </div>
+
       </div>
 
       <div class="resumen-card">
+
         <i class="fa-solid fa-road"></i>
 
         <div>
           <span>Total KM</span>
           <h2 id="totalKm">0</h2>
         </div>
+
       </div>
 
     </section>
 
+    <!-- FORMULARIO -->
     <section class="card">
 
       <div class="card-title">
+
         <i class="fa-solid fa-clipboard-list"></i>
+
         <h2>Nuevo Registro</h2>
+
       </div>
 
       <form id="formRegistro" class="form-grid">
 
         <div class="form-group">
           <label>Fecha</label>
-          <input type="date" id="fecha" required />
+          <input type="text" id="fecha" readonly />
         </div>
 
         <div class="form-group">
+
           <label>Vehículo</label>
 
           <select id="vehiculo" required>
             <option value="">Cargando vehículos...</option>
           </select>
+
         </div>
 
         <div class="form-group">
@@ -85,22 +108,27 @@
         </div>
 
         <div class="form-group">
+
           <label>Proyecto</label>
 
           <select id="proyecto" required>
             <option value="">Cargando proyectos...</option>
           </select>
+
         </div>
 
         <div class="form-group">
+
           <label>Conductor</label>
 
           <select id="conductor" required>
             <option value="">Cargando conductores...</option>
           </select>
+
         </div>
 
         <div class="form-group">
+
           <label>KM Inicial</label>
 
           <input
@@ -110,9 +138,11 @@
             inputmode="numeric"
             required
           />
+
         </div>
 
         <div class="form-group">
+
           <label>KM Final</label>
 
           <input
@@ -122,29 +152,42 @@
             inputmode="numeric"
             required
           />
+
         </div>
 
         <div class="form-group">
+
           <label>Total KM</label>
+
           <input type="text" id="totalKilometraje" readonly />
+
         </div>
 
         <button type="submit" class="btn-guardar">
+
           <i class="fa-solid fa-floppy-disk"></i>
+
           Guardar Registro
+
         </button>
 
       </form>
+
     </section>
 
+    <!-- REPORTE -->
     <section class="card">
 
       <div class="card-title">
+
         <i class="fa-solid fa-chart-column"></i>
+
         <h2>Reporte de Registros</h2>
+
       </div>
 
       <div class="search-box">
+
         <i class="fa-solid fa-magnifying-glass"></i>
 
         <input
@@ -152,6 +195,7 @@
           id="buscar"
           placeholder="Buscar por vehículo, placa, proyecto o conductor..."
         />
+
       </div>
 
       <div class="table-wrapper">
@@ -159,6 +203,7 @@
         <table>
 
           <thead>
+
             <tr>
               <th>Fecha</th>
               <th>Vehículo</th>
@@ -169,6 +214,7 @@
               <th>Total KM</th>
               <th>Conductor</th>
             </tr>
+
           </thead>
 
           <tbody id="tabla"></tbody>
@@ -181,6 +227,7 @@
 
   </div>
 
+  <!-- WHATSAPP -->
   <a
     href="https://wa.me/50685548880"
     class="whatsapp-float"

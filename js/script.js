@@ -18,11 +18,33 @@ const btnLimpiar = document.getElementById("btnLimpiar");
 
 let datosGlobales = [];
 
-fecha.value = new Date().toISOString().split("T")[0];
+/* =========================
+   FECHA FORMATO 13/05/2025
+========================= */
+
+function obtenerFechaActual() {
+  const hoy = new Date();
+
+  const dia = String(hoy.getDate()).padStart(2, "0");
+  const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+  const anio = hoy.getFullYear();
+
+  return `${dia}/${mes}/${anio}`;
+}
+
+fecha.value = obtenerFechaActual();
+
+/* =========================
+   LIMITAR A 6 DIGITOS
+========================= */
 
 function limitarSeisDigitos(input) {
   input.value = input.value.replace(/\D/g, "").slice(0, 6);
 }
+
+/* =========================
+   CALCULAR TOTAL KM
+========================= */
 
 function calcularTotal() {
   if (kmInicial.value === "" || kmFinal.value === "") {
@@ -47,10 +69,18 @@ kmFinal.addEventListener("input", function () {
   calcularTotal();
 });
 
+/* =========================
+   AUTOCOMPLETAR PLACA
+========================= */
+
 vehiculo.addEventListener("change", function () {
   const option = vehiculo.options[vehiculo.selectedIndex];
   placa.value = option.dataset.placa || "";
 });
+
+/* =========================
+   CARGAR CATALOGOS
+========================= */
 
 function cargarCatalogos() {
   const callbackName = "catalogos_" + Date.now();
@@ -65,8 +95,10 @@ function cargarCatalogos() {
   };
 
   const script = document.createElement("script");
+
   script.id = callbackName;
   script.src = `${API_URL}?accion=catalogos&callback=${callbackName}`;
+
   document.body.appendChild(script);
 }
 
@@ -86,7 +118,11 @@ function llenarProyectos(data) {
   proyecto.innerHTML = `<option value="">Seleccione proyecto</option>`;
 
   data.forEach(item => {
-    proyecto.innerHTML += `<option value="${item}">${item}</option>`;
+    proyecto.innerHTML += `
+      <option value="${item}">
+        ${item}
+      </option>
+    `;
   });
 }
 
@@ -94,9 +130,17 @@ function llenarConductores(data) {
   conductor.innerHTML = `<option value="">Seleccione conductor</option>`;
 
   data.forEach(item => {
-    conductor.innerHTML += `<option value="${item}">${item}</option>`;
+    conductor.innerHTML += `
+      <option value="${item}">
+        ${item}
+      </option>
+    `;
   });
 }
+
+/* =========================
+   GUARDAR REGISTRO
+========================= */
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -115,7 +159,11 @@ form.addEventListener("submit", async function (e) {
   const total = final - inicial;
 
   if (final < inicial) {
-    Swal.fire("Error", "El KM final no puede ser menor al KM inicial.", "error");
+    Swal.fire(
+      "Error",
+      "El KM final no puede ser menor al KM inicial.",
+      "error"
+    );
     return;
   }
 
@@ -152,6 +200,7 @@ form.addEventListener("submit", async function (e) {
   };
 
   try {
+
     await fetch(API_URL, {
       method: "POST",
       mode: "no-cors",
@@ -167,36 +216,59 @@ form.addEventListener("submit", async function (e) {
     });
 
     form.reset();
-    fecha.value = new Date().toISOString().split("T")[0];
+
+    fecha.value = obtenerFechaActual();
+
     placa.value = "";
     totalKilometraje.value = "";
 
     setTimeout(cargarDatos, 1200);
 
   } catch (error) {
-    Swal.fire("Error", "No se pudo guardar el registro.", "error");
+
+    Swal.fire(
+      "Error",
+      "No se pudo guardar el registro.",
+      "error"
+    );
   }
 });
+
+/* =========================
+   CARGAR DATOS
+========================= */
 
 function cargarDatos() {
   const callbackName = "registros_" + Date.now();
 
   window[callbackName] = function (data) {
+
     datosGlobales = data;
+
     mostrarDatos(data);
 
     delete window[callbackName];
+
     document.getElementById(callbackName)?.remove();
   };
 
   const script = document.createElement("script");
+
   script.id = callbackName;
   script.src = `${API_URL}?callback=${callbackName}`;
+
   document.body.appendChild(script);
 }
 
+/* =========================
+   FORMATEAR FECHA TABLA
+========================= */
+
 function formatearFecha(valor) {
+
   if (!valor) return "";
+
+  if (valor.includes("/")) return valor;
 
   const nuevaFecha = new Date(valor);
 
@@ -207,20 +279,31 @@ function formatearFecha(valor) {
   });
 }
 
+/* =========================
+   MOSTRAR DATOS
+========================= */
+
 function mostrarDatos(datos) {
+
   tabla.innerHTML = "";
 
   const textoBusqueda = buscar.value.toLowerCase();
 
   const datosFiltrados = datos.filter(item =>
+
     String(item.fecha).toLowerCase().includes(textoBusqueda) ||
+
     String(item.vehiculo).toLowerCase().includes(textoBusqueda) ||
+
     String(item.placa).toLowerCase().includes(textoBusqueda) ||
+
     String(item.proyecto).toLowerCase().includes(textoBusqueda) ||
+
     String(item.conductor).toLowerCase().includes(textoBusqueda)
   );
 
   if (datosFiltrados.length === 0) {
+
     tabla.innerHTML = `
       <tr>
         <td colspan="8">No hay registros</td>
@@ -231,6 +314,7 @@ function mostrarDatos(datos) {
   let sumaKm = 0;
 
   datosFiltrados.forEach(item => {
+
     sumaKm += Number(item.totalKm) || 0;
 
     tabla.innerHTML += `
@@ -251,12 +335,22 @@ function mostrarDatos(datos) {
   totalKm.textContent = sumaKm.toFixed(2);
 }
 
+/* =========================
+   BUSCAR
+========================= */
+
 buscar.addEventListener("input", function () {
   mostrarDatos(datosGlobales);
 });
 
+/* =========================
+   LIMPIAR
+========================= */
+
 if (btnLimpiar) {
+
   btnLimpiar.addEventListener("click", function () {
+
     Swal.fire(
       "Aviso",
       "Para limpiar los datos debes borrarlos directamente desde Google Sheets.",
@@ -264,6 +358,10 @@ if (btnLimpiar) {
     );
   });
 }
+
+/* =========================
+   INICIAR
+========================= */
 
 cargarCatalogos();
 cargarDatos();
