@@ -18,34 +18,19 @@ const btnLimpiar = document.getElementById("btnLimpiar");
 
 let datosGlobales = [];
 
-/* =========================
-   FECHA FORMATO 13/05/2025
-========================= */
+/* FECHA CON SELECTOR DD/MM/YYYY */
+flatpickr("#fecha", {
+  locale: "es",
+  dateFormat: "d/m/Y",
+  defaultDate: "today"
+});
 
-function obtenerFechaActual() {
-  const hoy = new Date();
-
-  const dia = String(hoy.getDate()).padStart(2, "0");
-  const mes = String(hoy.getMonth() + 1).padStart(2, "0");
-  const anio = hoy.getFullYear();
-
-  return `${dia}/${mes}/${anio}`;
-}
-
-fecha.value = obtenerFechaActual();
-
-/* =========================
-   LIMITAR A 6 DIGITOS
-========================= */
-
+/* LIMITAR KM A 6 DÍGITOS */
 function limitarSeisDigitos(input) {
   input.value = input.value.replace(/\D/g, "").slice(0, 6);
 }
 
-/* =========================
-   CALCULAR TOTAL KM
-========================= */
-
+/* CALCULAR TOTAL KM */
 function calcularTotal() {
   if (kmInicial.value === "" || kmFinal.value === "") {
     totalKilometraje.value = "";
@@ -69,19 +54,13 @@ kmFinal.addEventListener("input", function () {
   calcularTotal();
 });
 
-/* =========================
-   AUTOCOMPLETAR PLACA
-========================= */
-
+/* AUTOCOMPLETAR PLACA */
 vehiculo.addEventListener("change", function () {
   const option = vehiculo.options[vehiculo.selectedIndex];
   placa.value = option.dataset.placa || "";
 });
 
-/* =========================
-   CARGAR CATALOGOS
-========================= */
-
+/* CARGAR CATÁLOGOS */
 function cargarCatalogos() {
   const callbackName = "catalogos_" + Date.now();
 
@@ -95,10 +74,8 @@ function cargarCatalogos() {
   };
 
   const script = document.createElement("script");
-
   script.id = callbackName;
   script.src = `${API_URL}?accion=catalogos&callback=${callbackName}`;
-
   document.body.appendChild(script);
 }
 
@@ -138,10 +115,7 @@ function llenarConductores(data) {
   });
 }
 
-/* =========================
-   GUARDAR REGISTRO
-========================= */
-
+/* GUARDAR REGISTRO */
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
@@ -170,6 +144,7 @@ form.addEventListener("submit", async function (e) {
   const result = await Swal.fire({
     title: "¿Guardar registro?",
     html: `
+      <b>Fecha:</b> ${fecha.value}<br>
       <b>Vehículo:</b> ${vehiculo.value}<br>
       <b>Placa:</b> ${placa.value}<br>
       <b>Proyecto:</b> ${proyecto.value}<br>
@@ -200,7 +175,6 @@ form.addEventListener("submit", async function (e) {
   };
 
   try {
-
     await fetch(API_URL, {
       method: "POST",
       mode: "no-cors",
@@ -217,7 +191,11 @@ form.addEventListener("submit", async function (e) {
 
     form.reset();
 
-    fecha.value = obtenerFechaActual();
+    flatpickr("#fecha", {
+      locale: "es",
+      dateFormat: "d/m/Y",
+      defaultDate: "today"
+    });
 
     placa.value = "";
     totalKilometraje.value = "";
@@ -225,7 +203,6 @@ form.addEventListener("submit", async function (e) {
     setTimeout(cargarDatos, 1200);
 
   } catch (error) {
-
     Swal.fire(
       "Error",
       "No se pudo guardar el registro.",
@@ -234,76 +211,59 @@ form.addEventListener("submit", async function (e) {
   }
 });
 
-/* =========================
-   CARGAR DATOS
-========================= */
-
+/* CARGAR DATOS */
 function cargarDatos() {
   const callbackName = "registros_" + Date.now();
 
   window[callbackName] = function (data) {
-
     datosGlobales = data;
-
     mostrarDatos(data);
 
     delete window[callbackName];
-
     document.getElementById(callbackName)?.remove();
   };
 
   const script = document.createElement("script");
-
   script.id = callbackName;
   script.src = `${API_URL}?callback=${callbackName}`;
-
   document.body.appendChild(script);
 }
 
-/* =========================
-   FORMATEAR FECHA TABLA
-========================= */
-
+/* FORMATEAR FECHA DD/MM/YYYY */
 function formatearFecha(valor) {
-
   if (!valor) return "";
 
-  if (valor.includes("/")) return valor;
+  const texto = String(valor);
 
-  const nuevaFecha = new Date(valor);
+  if (texto.includes("/")) {
+    return texto;
+  }
 
-  return nuevaFecha.toLocaleDateString("es-CR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  });
+  const fechaObj = new Date(texto);
+
+  const dia = String(fechaObj.getUTCDate()).padStart(2, "0");
+  const mes = String(fechaObj.getUTCMonth() + 1).padStart(2, "0");
+  const anio = fechaObj.getUTCFullYear();
+
+  return `${dia}/${mes}/${anio}`;
 }
 
-/* =========================
-   MOSTRAR DATOS
-========================= */
-
+/* MOSTRAR DATOS */
 function mostrarDatos(datos) {
-
   tabla.innerHTML = "";
 
   const textoBusqueda = buscar.value.toLowerCase();
 
   const datosFiltrados = datos.filter(item =>
-
     String(item.fecha).toLowerCase().includes(textoBusqueda) ||
-
+    formatearFecha(item.fecha).toLowerCase().includes(textoBusqueda) ||
     String(item.vehiculo).toLowerCase().includes(textoBusqueda) ||
-
     String(item.placa).toLowerCase().includes(textoBusqueda) ||
-
     String(item.proyecto).toLowerCase().includes(textoBusqueda) ||
-
     String(item.conductor).toLowerCase().includes(textoBusqueda)
   );
 
   if (datosFiltrados.length === 0) {
-
     tabla.innerHTML = `
       <tr>
         <td colspan="8">No hay registros</td>
@@ -314,7 +274,6 @@ function mostrarDatos(datos) {
   let sumaKm = 0;
 
   datosFiltrados.forEach(item => {
-
     sumaKm += Number(item.totalKm) || 0;
 
     tabla.innerHTML += `
@@ -335,22 +294,14 @@ function mostrarDatos(datos) {
   totalKm.textContent = sumaKm.toFixed(2);
 }
 
-/* =========================
-   BUSCAR
-========================= */
-
+/* BUSCADOR */
 buscar.addEventListener("input", function () {
   mostrarDatos(datosGlobales);
 });
 
-/* =========================
-   LIMPIAR
-========================= */
-
+/* BOTÓN LIMPIAR SI EXISTE */
 if (btnLimpiar) {
-
   btnLimpiar.addEventListener("click", function () {
-
     Swal.fire(
       "Aviso",
       "Para limpiar los datos debes borrarlos directamente desde Google Sheets.",
@@ -359,9 +310,6 @@ if (btnLimpiar) {
   });
 }
 
-/* =========================
-   INICIAR
-========================= */
-
+/* INICIAR */
 cargarCatalogos();
 cargarDatos();
