@@ -1,245 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Kilometraje" />
+    <title>Control de Kilometraje</title>
 
-  <title>Control de Kilometraje</title>
+    <link rel="stylesheet" href="./css/style.css" />
 
-  <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-/>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+  <body>
+    <div class="background-overlay"></div>
 
-<body>
+    <div class="container">
+      <!-- HERO -->
+      <header class="hero">
+  <div class="hero-content hero-dashboard">
 
-  <div class="background-overlay"></div>
+    <div class="speedometer-card">
+      <img
+        src="./assets/velocimetro.png"
+        alt="Velocímetro de kilometraje"
+        class="hero-speedometer"
+      />
 
-  <div class="container">
-
-    <!-- HERO -->
-    <header class="hero">
-
-      <div class="hero-content">
-
-        <h1>
-          <i class="fa-solid fa-truck-fast"></i>
-          Control de Kilometraje
-        </h1>
-
-        <p>
-          ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ... ¡GRACIAS!
-        </p>
-
+      <div class="speedometer-overlay">
+        <span>Sistema activo</span>
+        <strong>Control KM</strong>
       </div>
-
-    </header>
-
-    <!-- CARRO ANIMADO -->
-    <div class="car-animation">
-      <div class="road"></div>
-
-      <i class="fa-solid fa-truck-moving"></i>
     </div>
 
-    <!-- RESUMEN -->
-    <section class="resumen">
-
-      <div class="resumen-card">
-
-        <i class="fa-solid fa-file-lines"></i>
-
-        <div>
-          <span>Total registros</span>
-          <h2 id="totalRegistros">0</h2>
-        </div>
-
-      </div>
-
-      <div class="resumen-card">
-
-        <i class="fa-solid fa-road"></i>
-
-        <div>
-          <span>Total KM</span>
-          <h2 id="totalKm">0</h2>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- FORMULARIO -->
-    <section class="card">
-
-      <div class="card-title">
-
-        <i class="fa-solid fa-clipboard-list"></i>
-
-        <h2>Nuevo Registro</h2>
-
-      </div>
-
-      <form id="formRegistro" class="form-grid">
-
-        <div class="form-group">
-          <label>Fecha</label>
-          <input type="text" id="fecha" required />
-        </div>
-
-        <div class="form-group">
-
-          <label>Vehículo</label>
-
-          <select id="vehiculo" required>
-            <option value="">Cargando vehículos...</option>
-          </select>
-
-        </div>
-
-        <div class="form-group">
-          <label>Placa</label>
-          <input type="text" id="placa" readonly />
-        </div>
-
-        <div class="form-group">
-
-          <label>Proyecto</label>
-
-          <select id="proyecto" required>
-            <option value="">Cargando proyectos...</option>
-          </select>
-
-        </div>
-
-        <div class="form-group">
-
-          <label>Conductor</label>
-
-          <select id="conductor" required>
-            <option value="">Cargando conductores...</option>
-          </select>
-
-        </div>
-
-        <div class="form-group">
-
-          <label>KM Inicial</label>
-
-          <input
-            type="text"
-            id="kmInicial"
-            maxlength="6"
-            inputmode="numeric"
-            required
-          />
-
-        </div>
-
-        <div class="form-group">
-
-          <label>KM Final</label>
-
-          <input
-            type="text"
-            id="kmFinal"
-            maxlength="6"
-            inputmode="numeric"
-            required
-          />
-
-        </div>
-
-        <div class="form-group">
-
-          <label>Total KM</label>
-
-          <input type="text" id="totalKilometraje" readonly />
-
-        </div>
-
-        <button type="submit" class="btn-guardar">
-
-          <i class="fa-solid fa-floppy-disk"></i>
-
-          Guardar Registro
-
-        </button>
-
-      </form>
-
-    </section>
-
-    <!-- REPORTE -->
-    <section class="card">
-
-      <div class="card-title">
-
-        <i class="fa-solid fa-chart-column"></i>
-
-        <h2>Reporte de Registros</h2>
-
-      </div>
-
-      <div class="search-box">
-
-        <i class="fa-solid fa-magnifying-glass"></i>
-
-        <input
-          type="text"
-          id="buscar"
-          placeholder="Buscar por vehículo, placa, proyecto o conductor..."
-        />
-
-      </div>
-
-      <div class="table-wrapper">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>Fecha</th>
-              <th>Vehículo</th>
-              <th>Placa</th>
-              <th>Proyecto</th>
-              <th>KM Inicial</th>
-              <th>KM Final</th>
-              <th>Total KM</th>
-              <th>Conductor</th>
-            </tr>
-
-          </thead>
-
-          <tbody id="tabla"></tbody>
-
-        </table>
-
-      </div>
-
-    </section>
+    <div class="hero-text">
+      <h1>
+        <i class="fa-solid fa-truck-fast"></i>
+        Control de Kilometraje
+      </h1>
+
+      <p>
+        ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ... ¡GRACIAS!
+      </p>
+    </div>
 
   </div>
+</header>
 
-  <!-- WHATSAPP -->
-  <a
-    href="https://wa.me/50685548880"
-    class="whatsapp-float"
-    target="_blank"
-  >
-    <i class="fa-brands fa-whatsapp"></i>
-  </a>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="./js/script.js"></script>
+      <!-- CARRO ANIMADO -->
+      <div class="car-animation">
+        <div class="road"></div>
 
-</body>
+        <i class="fa-solid fa-truck-moving"></i>
+      </div>
+
+      <!-- RESUMEN -->
+      <section class="resumen">
+        <div class="resumen-card">
+          <i class="fa-solid fa-file-lines"></i>
+
+          <div>
+            <span>Total registros</span>
+            <h2 id="totalRegistros">0</h2>
+          </div>
+        </div>
+
+        <div class="resumen-card">
+          <i class="fa-solid fa-road"></i>
+
+          <div>
+            <span>Total KM</span>
+            <h2 id="totalKm">0</h2>
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMULARIO -->
+      <section class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-clipboard-list"></i>
+
+          <h2>Nuevo Registro</h2>
+        </div>
+
+        <form id="formRegistro" class="form-grid">
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="text" id="fecha" required />
+          </div>
+
+          <div class="form-group">
+            <label>Vehículo</label>
+
+            <select id="vehiculo" required>
+              <option value="">Cargando vehículos...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Placa</label>
+            <input type="text" id="placa" readonly />
+          </div>
+
+          <div class="form-group">
+            <label>Proyecto</label>
+
+            <select id="proyecto" required>
+              <option value="">Cargando proyectos...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Conductor</label>
+
+            <select id="conductor" required>
+              <option value="">Cargando conductores...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>KM Inicial</label>
+
+            <input
+              type="text"
+              id="kmInicial"
+              maxlength="6"
+              inputmode="numeric"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>KM Final</label>
+
+            <input
+              type="text"
+              id="kmFinal"
+              maxlength="6"
+              inputmode="numeric"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Total KM</label>
+
+            <input type="text" id="totalKilometraje" readonly />
+          </div>
+
+          <button type="submit" class="btn-guardar">
+            <i class="fa-solid fa-floppy-disk"></i>
+
+            Guardar Registro
+          </button>
+        </form>
+      </section>
+
+      <!-- REPORTE -->
+      <section class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-chart-column"></i>
+
+          <h2>Reporte de Registros</h2>
+        </div>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+
+          <input
+            type="text"
+            id="buscar"
+            placeholder="Buscar por vehículo, placa, proyecto o conductor..."
+          />
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Vehículo</th>
+                <th>Placa</th>
+                <th>Proyecto</th>
+                <th>KM Inicial</th>
+                <th>KM Final</th>
+                <th>Total KM</th>
+                <th>Conductor</th>
+              </tr>
+            </thead>
+
+            <tbody id="tabla"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/50685548880" class="whatsapp-float" target="_blank">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    -----------------------------------------------------------
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .then(() => console.log("Service Worker registrado"))
+          .catch((error) => console.log("Error Service Worker:", error));
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="./js/script.js"></script>
+  </body>
 </html>

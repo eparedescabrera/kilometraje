@@ -341,3 +341,144 @@ select option:hover {
     transform: scaleX(1);
   }
 }
+/* =========================
+   HERO PROFESIONAL CON VELOCÍMETRO
+========================= */
+
+.hero-dashboard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  align-items: center;
+  gap: 28px;
+  text-align: left;
+}
+
+.speedometer-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,64,175,0.35));
+  border-radius: 24px;
+  padding: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.35),
+    inset 0 0 25px rgba(96,165,250,0.18);
+  border: 1px solid rgba(96,165,250,0.25);
+}
+
+.speedometer-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: conic-gradient(
+    from 180deg,
+    transparent,
+    rgba(37,99,235,0.45),
+    transparent,
+    rgba(96,165,250,0.35),
+    transparent
+  );
+  animation: rotateGlow 8s linear infinite;
+}
+
+.hero-speedometer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+  filter: contrast(1.1) saturate(1.2);
+}
+
+.speedometer-overlay {
+  position: absolute;
+  z-index: 3;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  background: rgba(15,23,42,0.72);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(96,165,250,0.25);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.speedometer-overlay span {
+  display: block;
+  font-size: 12px;
+  color: #93c5fd;
+}
+
+.speedometer-overlay strong {
+  display: block;
+  color: white;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.hero-text h1 {
+  margin-bottom: 12px;
+}
+
+.hero-text p {
+  color: #dbeafe;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@keyframes rotateGlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .hero-dashboard {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .speedometer-card {
+    max-width: 340px;
+    margin: auto;
+  }
+
+  .hero-speedometer {
+    height: 190px;
+  }
+}
+/* =========================
+   ANIMACIÓN PROFESIONAL DEL VELOCÍMETRO
+========================= */
+
+.speedometer-card {
+  animation: floatingCard 2s ease-in-out infinite, glowPulse 1.2s alternate infinite;
+}
+
+@keyframes floatingCard {
+  0% {
+    transform: translateY(0px) scale(1);
+  }
+
+  25% {
+    transform: translateY(-10px) scale(1.01);
+  }
+
+  50% {
+    transform: translateY(-18px) scale(1.02);
+  }
+
+  75% {
+    transform: translateY(-10px) scale(1.01);
+  }
+
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+}
