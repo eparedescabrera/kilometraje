@@ -1,4 +1,4 @@
-const CACHE_NAME = "control-kilometraje-v3";
+const CACHE_NAME = "control-kilometraje-v4";
 
 const FILES_TO_CACHE = [
   "./",

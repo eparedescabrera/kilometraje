@@ -18,6 +18,8 @@ const btnLimpiar = document.getElementById("btnLimpiar");
 const btnAnterior = document.getElementById("btnAnterior");
 const btnSiguiente = document.getElementById("btnSiguiente");
 const infoPagina = document.getElementById("infoPagina");
+const btnExportarExcel = document.getElementById("btnExportarExcel");
+const PASSWORD_REPORTE = "1989";
 
 let datosGlobales = [];
 let paginaActual = 1;
@@ -344,3 +346,67 @@ btnSiguiente.addEventListener("click", function () {
 /* INICIAR */
 cargarCatalogos();
 cargarDatos();
+if (btnExportarExcel) {
+  btnExportarExcel.addEventListener("click", async function () {
+    const result = await Swal.fire({
+      title: "Acceso restringido",
+      input: "password",
+      inputLabel: "Ingrese la contraseña para generar el reporte",
+      inputPlaceholder: "Contraseña",
+      showCancelButton: true,
+      confirmButtonText: "Generar reporte",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#2563eb",
+      cancelButtonColor: "#dc2626"
+    });
+
+    if (!result.isConfirmed) return;
+
+    if (result.value !== PASSWORD_REPORTE) {
+      Swal.fire("Acceso denegado", "Contraseña incorrecta.", "error");
+      return;
+    }
+
+   exportarExcel();
+  });
+}
+
+function exportarExcel() {
+
+  if (!datosGlobales || datosGlobales.length === 0) {
+    Swal.fire("Aviso", "No hay datos para exportar.", "info");
+    return;
+  }
+
+  const datosExcel = datosGlobales.map(item => ({
+    Fecha: formatearFecha(item.fecha),
+    Vehículo: item.vehiculo,
+    Placa: item.placa,
+    Proyecto: item.proyecto,
+    "KM Inicial": item.kmInicial,
+    "KM Final": item.kmFinal,
+    "Total KM": item.totalKm,
+    Conductor: item.conductor
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(datosExcel);
+
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Reporte KM"
+  );
+
+  XLSX.writeFile(
+    workbook,
+    "Reporte_Kilometraje.xlsx"
+  );
+
+  Swal.fire(
+    "Reporte generado",
+    "El archivo Excel se descargó correctamente.",
+    "success"
+  );
+}
