@@ -29,34 +29,30 @@
     <div class="container">
       <!-- HERO -->
       <header class="hero">
-  <div class="hero-content hero-dashboard">
+        <div class="hero-content hero-dashboard">
+          <div class="speedometer-card">
+            <img
+              src="./assets/velocimetro.png"
+              alt="Velocímetro de kilometraje"
+              class="hero-speedometer"
+            />
 
-    <div class="speedometer-card">
-      <img
-        src="./assets/velocimetro.png"
-        alt="Velocímetro de kilometraje"
-        class="hero-speedometer"
-      />
+            <div class="speedometer-overlay">
+              <span>Sistema activo</span>
+              <strong>Control KM</strong>
+            </div>
+          </div>
 
-      <div class="speedometer-overlay">
-        <span>Sistema activo</span>
-        <strong>Control KM</strong>
-      </div>
-    </div>
+          <div class="hero-text">
+            <h1>
+              <i class="fa-solid fa-truck-fast"></i>
+              Control de Kilometraje
+            </h1>
 
-    <div class="hero-text">
-      <h1>
-        <i class="fa-solid fa-truck-fast"></i>
-        Control de Kilometraje
-      </h1>
-
-      <p>
-        ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ... ¡GRACIAS!
-      </p>
-    </div>
-
-  </div>
-</header>
+            <p>ANTES DE GUARDAR FAVOR VERIFICAR KILOMETRAJE ... ¡GRACIAS!</p>
+          </div>
+        </div>
+      </header>
 
       <!-- CARRO ANIMADO -->
       <div class="car-animation">
@@ -203,6 +199,11 @@
             <tbody id="tabla"></tbody>
           </table>
         </div>
+        <div class="pagination">
+          <button id="btnAnterior" type="button">Anterior</button>
+          <span id="infoPagina">Página 1 de 1</span>
+          <button id="btnSiguiente" type="button">Siguiente</button>
+        </div>
       </section>
     </div>
 
@@ -210,7 +211,7 @@
     <a href="https://wa.me/50685548880" class="whatsapp-float" target="_blank">
       <i class="fa-brands fa-whatsapp"></i>
     </a>
-    -----------------------------------------------------------
+
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker

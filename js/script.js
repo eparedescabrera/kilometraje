@@ -15,8 +15,13 @@ const totalRegistros = document.getElementById("totalRegistros");
 const totalKm = document.getElementById("totalKm");
 const buscar = document.getElementById("buscar");
 const btnLimpiar = document.getElementById("btnLimpiar");
+const btnAnterior = document.getElementById("btnAnterior");
+const btnSiguiente = document.getElementById("btnSiguiente");
+const infoPagina = document.getElementById("infoPagina");
 
 let datosGlobales = [];
+let paginaActual = 1;
+const registrosPorPagina = 5;
 
 /* FECHA CON SELECTOR DD/MM/YYYY */
 flatpickr("#fecha", {
@@ -248,7 +253,6 @@ function formatearFecha(valor) {
   return `${dia}/${mes}/${anio}`;
 }
 
-/* MOSTRAR DATOS */
 function mostrarDatos(datos) {
   tabla.innerHTML = "";
 
@@ -263,7 +267,18 @@ function mostrarDatos(datos) {
     String(item.conductor).toLowerCase().includes(textoBusqueda)
   );
 
-  if (datosFiltrados.length === 0) {
+  const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina) || 1;
+
+  if (paginaActual > totalPaginas) {
+    paginaActual = totalPaginas;
+  }
+
+  const inicio = (paginaActual - 1) * registrosPorPagina;
+  const fin = inicio + registrosPorPagina;
+
+  const datosPagina = datosFiltrados.slice(inicio, fin);
+
+  if (datosPagina.length === 0) {
     tabla.innerHTML = `
       <tr>
         <td colspan="8">No hay registros</td>
@@ -275,7 +290,9 @@ function mostrarDatos(datos) {
 
   datosFiltrados.forEach(item => {
     sumaKm += Number(item.totalKm) || 0;
+  });
 
+  datosPagina.forEach(item => {
     tabla.innerHTML += `
       <tr>
         <td>${formatearFecha(item.fecha)}</td>
@@ -292,10 +309,14 @@ function mostrarDatos(datos) {
 
   totalRegistros.textContent = datosFiltrados.length;
   totalKm.textContent = sumaKm.toFixed(2);
-}
 
-/* BUSCADOR */
+  infoPagina.textContent = `Página ${paginaActual} de ${totalPaginas}`;
+
+  btnAnterior.disabled = paginaActual === 1;
+  btnSiguiente.disabled = paginaActual === totalPaginas;
+}
 buscar.addEventListener("input", function () {
+  paginaActual = 1;
   mostrarDatos(datosGlobales);
 });
 
@@ -309,7 +330,17 @@ if (btnLimpiar) {
     );
   });
 }
+btnAnterior.addEventListener("click", function () {
+  if (paginaActual > 1) {
+    paginaActual--;
+    mostrarDatos(datosGlobales);
+  }
+});
 
+btnSiguiente.addEventListener("click", function () {
+  paginaActual++;
+  mostrarDatos(datosGlobales);
+});
 /* INICIAR */
 cargarCatalogos();
 cargarDatos();
