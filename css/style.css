@@ -525,3 +525,33 @@ select option:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(22, 163, 74, 0.35);
 }
+/* =========================
+   INPUT VOZ
+========================= */
+
+.voice-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voice-input input {
+  flex: 1;
+}
+
+.btn-mic {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.btn-mic:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+}

@@ -343,6 +343,64 @@ btnSiguiente.addEventListener("click", function () {
   paginaActual++;
   mostrarDatos(datosGlobales);
 });
+/* =========================
+   RECONOCIMIENTO DE VOZ
+========================= */
+
+function iniciarVoz(inputId) {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    Swal.fire(
+      "No compatible",
+      "Tu navegador no soporta reconocimiento de voz.",
+      "error"
+    );
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "es-ES";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.start();
+
+  Swal.fire({
+    title: "Escuchando...",
+    text: "Diga el kilometraje",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  recognition.onresult = function(event) {
+
+    let texto =
+      event.results[0][0].transcript;
+
+    texto = texto.replace(/\D/g, "").slice(0, 6);
+
+    document.getElementById(inputId).value = texto;
+
+    calcularTotal();
+
+    Swal.close();
+  };
+
+  recognition.onerror = function() {
+    Swal.fire(
+      "Error",
+      "No se pudo reconocer la voz.",
+      "error"
+    );
+  };
+}
 /* INICIAR */
 cargarCatalogos();
 cargarDatos();
